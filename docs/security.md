@@ -43,9 +43,14 @@ services demand a login without authenticating:
 
 | Requires login | No login on the LAN |
 |---|---|
-| Home Assistant, Immich, Navidrome | Homepage dashboard (read-only status page) |
+| Home Assistant, Immich, Navidrome | Homepage dashboard and the live status dashboard (read-only status pages) |
 | Jellyfin (sign-in screen; only the public user list is visible) | |
 | Portainer (forces an admin password on first run; not probed) | |
+
+The live status dashboard is deliberately read-only and has no secrets to leak: it exposes container names,
+health and resource numbers, nothing else. Its container runs with a read-only filesystem, all Linux capabilities
+dropped, `no-new-privileges`, and CPU and memory limits, and it only mounts the Docker socket, `/sys` and the host
+root as read-only.
 
 ## Secrets handling
 
@@ -60,7 +65,7 @@ services demand a login without authenticating:
 | Gap | Planned fix |
 |---|---|
 | Visitors on the main Wi-Fi can reach the server | Use the router's guest network with local-network access disabled |
-| Homepage has no login | Put it behind Tailscale only or add a reverse proxy with authentication |
+| Homepage and the status dashboard have no login | Put them behind Tailscale only or add a reverse proxy with authentication |
 | Subnet routing widens Tailscale's reach | Tailscale ACLs, or advertise only the server instead of the whole subnet |
 | An unused web server (Apache) is installed on the host | Disable and remove it |
 | Single drive, no off-site backup | SSD upgrade and an encrypted off-site backup of the photo library |

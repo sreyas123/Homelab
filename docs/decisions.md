@@ -48,3 +48,14 @@ suspend the machine unless `HandleLidSwitch=ignore` is set.)
 ## Disabling unused desktop extras
 **Why:** nothing on the server uses the Bluetooth applet, update tray or mail/calendar background services.
 They are disabled through autostart overrides, which are trivial to undo.
+
+## A small custom dashboard instead of Prometheus and Grafana
+**Why:** the question I need answered is "is anything wrong right now, and how busy is it?". A Prometheus and
+Grafana stack would use more memory and disk than this laptop can spare and adds several moving parts. A single
+Python file reading `/proc` and cgroups answers the question using about 25 MB of RAM. The cost is no long-term
+history; a time-series stack is listed as a future improvement if trends ever matter.
+
+## A glass-style interface that adapts to the screen
+**Why:** the dashboards are mostly used on a phone, in either orientation. They use fluid grids and a few
+breakpoints (including a short-and-wide landscape layout) instead of separate pages, and a lighter blur on small
+screens so scrolling stays smooth on mid-range hardware.

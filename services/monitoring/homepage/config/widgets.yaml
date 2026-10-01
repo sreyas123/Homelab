@@ -9,9 +9,7 @@
     cputemp: true
     memory: true
     uptime: true
+    disk: /mnt/host-root
     units: metric
     tempmin: 30
     tempmax: 90
-
-- resources:
-    disk: /mnt/host-root

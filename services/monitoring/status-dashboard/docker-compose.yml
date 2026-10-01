@@ -1,0 +1,31 @@
+# status-dashboard - live server status page and JSON API (custom, standard-library Python).
+# Copy services.example.json to services.json and edit it to name your own containers.
+services:
+  status-dashboard:
+    build: .
+    image: status-dashboard:latest
+    container_name: status-dashboard
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      - SERVER_NAME=Home Server  # (Put the name you want shown at the top of the page)
+      # - DISK_WARN_PCT=85  MEM_WARN_PCT=90  IO_WARN_PCT=30   (alert thresholds, optional)
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro   # container list and health
+      - /:/hostfs:ro                                   # disk usage only
+      - /sys:/hostsys:ro                               # temperatures and per-container cgroup stats
+      - ./services.json:/app/services.json:ro          # friendly names and groups (copy of services.example.json)
+    read_only: true                                    # nothing is ever written
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 128m
+    cpus: 0.5
+    logging:
+      driver: json-file
+      options: {max-size: "1m", max-file: "2"}
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request;urllib.request.urlopen('http://127.0.0.1:3002/healthz',timeout=4)"]
+      interval: 60s
+      timeout: 6s
+      retries: 3

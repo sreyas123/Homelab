@@ -1,47 +1,142 @@
-/* Phone-first layout */
-body { -webkit-tap-highlight-color: transparent; }
+/* ==========================================================================
+   Liquid-glass theme for Homepage - phone first, portrait and landscape.
+   - frosted translucent cards (backdrop blur + specular edge highlight)
+   - soft coloured light behind the glass
+   - 2 tiles per row in portrait, 4+ in landscape / on wide screens
+   ========================================================================== */
+:root {
+  --lg-bg: #070b17;
+  --lg-fg: #f4f6ff;
+  --lg-muted: rgba(232, 236, 255, .68);
+  --lg-faint: rgba(232, 236, 255, .46);
+  --lg-a: rgba(255, 255, 255, .15);
+  --lg-b: rgba(255, 255, 255, .04);
+  --lg-edge: rgba(255, 255, 255, .20);
+  --lg-hi: rgba(255, 255, 255, .42);
+  --lg-shadow: rgba(0, 0, 0, .32);
+  --lg-r: 22px;
+  --lg-gap: 10px;
+}
 
-/* Stats bar: tidy, centered */
-#information-widgets { margin: 12px 12px 0 !important; padding-bottom: 10px !important; justify-content: center !important; gap: 6px 14px; }
-#information-widgets .widget-container { align-self: center; }
+/* ---- background light ---- */
+html { background: var(--lg-bg); }
+body, #page_wrapper, #inner_wrapper, #page_container, #__next { background: transparent !important; color: var(--lg-fg); }
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 10% 6%, rgba(99, 102, 241, .60), transparent 62%),
+    radial-gradient(52% 46% at 92% 10%, rgba(236, 72, 153, .42), transparent 62%),
+    radial-gradient(58% 56% at 84% 96%, rgba(20, 184, 166, .48), transparent 62%),
+    radial-gradient(46% 46% at 6% 92%, rgba(245, 158, 11, .30), transparent 62%),
+    var(--lg-bg);
+}
 
-/* Two tiles per row */
-#services { padding-left: 4px; padding-right: 4px; }
-.services-group { padding-left: 8px !important; padding-right: 8px !important; }
-.services-list { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 8px !important; }
+/* ---- the glass material (tiles and the stats bar) ---- */
+.services-list .service > div,
+#information-widgets > div {
+  position: relative;
+  background: linear-gradient(145deg, var(--lg-a), var(--lg-b)) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(170%) !important;
+  backdrop-filter: blur(22px) saturate(170%) !important;
+  border: 1px solid var(--lg-edge) !important;
+  border-radius: var(--lg-r) !important;
+  box-shadow: 0 10px 30px var(--lg-shadow), inset 0 1px 0 var(--lg-hi), inset 0 -1px 0 rgba(255, 255, 255, .06), inset 0 0 22px rgba(255, 255, 255, .04) !important;
+}
+.services-list .service > div { overflow: hidden; }
+/* specular highlight in the top-left corner */
+.services-list .service > div::before,
+#information-widgets > div::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 0;
+  background: radial-gradient(120% 70% at 0% 0%, rgba(255, 255, 255, .20), transparent 48%), linear-gradient(180deg, rgba(255, 255, 255, .08), transparent 30%);
+}
+
+
+/* ---- layout: two tiles per row on a portrait phone ---- */
+#services { padding: 0 4px; }
+.services-group { padding-left: 8px !important; padding-right: 8px !important; padding-top: 12px; }
+.services-list { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--lg-gap); margin-top: 8px !important; }
 .services-list > .service { margin: 0 !important; }
 .services-list .service > div { margin-bottom: 0 !important; }
 
-/* Compact tile: icon on top, name and description underneath */
-.service-card, .service > div { border-radius: 16px !important; }
-.service-title { font-size: 1.1rem; letter-spacing: .02em; margin-bottom: 0 !important; }
-.service-name { font-size: 0.9rem; font-weight: 600; line-height: 1.15; }
-.service-description { font-size: 0.68rem; opacity: 0.65; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* group headings: small, spaced, muted */
+.services-group h2, .services-group [class*=group] > button {
+  font-size: .78rem !important; font-weight: 650 !important; letter-spacing: .1em !important; text-transform: uppercase;
+  color: var(--lg-muted) !important; opacity: 1 !important;
+}
+.services-group h2 svg, .services-group [class*=group] > button svg { opacity: .7; width: 18px !important; height: 18px !important; }
+
+/* the first group ("Live") is one wide tile */
+.services-group:first-of-type .services-list { grid-template-columns: minmax(0, 1fr); }
+
+/* ---- tile content ---- */
+.service-title { font-size: 1.05rem; letter-spacing: .01em; margin-bottom: 0 !important; }
+.service-name { font-size: .92rem; font-weight: 650; line-height: 1.15; min-width: 0; color: var(--lg-fg); }
+.service-description { font-size: .68rem; color: var(--lg-muted); opacity: 1; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .service-icon { width: 32px !important; height: 32px !important; }
 .service-icon img, .service-icon svg { width: 28px; height: 28px; }
 .service-title, .service-name { min-width: 0; }
+.service-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-right: 22px !important; padding-top: 10px !important; padding-bottom: 6px !important; }
 
-/* One dot per tile, tucked in the corner, never over the name */
-.service-tags { top: 6px !important; right: 6px !important; }
-.service-tags > * > div { padding: 4px !important; }
-.service-tags > * > div > div { width: 9px !important; height: 9px !important; }
+/* status dot: small, in the corner, with a soft glow */
+.service-tags { top: 8px !important; right: 8px !important; }
+.service-tags > * > div { padding: 4px !important; background: transparent !important; }
+.service-tags > * > div > div { width: 9px !important; height: 9px !important; box-shadow: 0 0 10px currentColor; }
 .service-tags:has(.service-site-monitor) .service-container-stats { display: none !important; }
-.service-name { padding-right: 22px !important; padding-top: 10px !important; padding-bottom: 10px !important; }
-.service-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-/* Clock on its own row above the stats */
-#information-widgets > div > div:last-child { order: -1; flex-basis: 100%; justify-content: center !important; margin-bottom: 8px; }
-#information-widgets .widget-container { flex-basis: 100%; }
+/* live numbers inside a tile (the widget fields) */
+.service-container, .service [class*=service-block], .service [class*=widget] { color: var(--lg-fg); }
+.services-list .service > div > div:last-child { background: transparent !important; }
+.services-list .service [class*=service-block] { background: rgba(255, 255, 255, .08) !important; border-radius: 12px !important; margin: 2px !important; padding: 4px 6px !important; min-width: 0; }
+.services-list .service [class*=service-block] > div:first-child { font-weight: 650; font-size: .82rem; }
+.services-list .service [class*=service-block] > div:last-child { font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; color: var(--lg-muted); }
+
+/* ---- use the full width of the screen (Homepage caps the column by default) ---- */
+#page_container, #page_container > div, #services, #layout-groups, .container, [class*="max-w-"] { max-width: none !important; }
+.container { width: 100% !important; }
+
+/* ---- stats bar (CPU, memory, temperature ...) ---- */
+#information-widgets { margin: 12px 12px 2px !important; padding: 0 !important; height: auto !important; }
+#information-widgets > div { padding: 12px 14px 8px !important; justify-content: center !important; gap: 6px 14px; margin: 0 !important; width: 100%; }
+#information-widgets > div > div:last-child { order: -1; flex-basis: 100%; justify-content: center !important; margin-bottom: 8px; text-align: center; }
+#information-widgets > div > div:last-child * { justify-content: center !important; text-align: center; }
+#information-widgets .widget-container { flex-basis: 100%; padding: 0 6px; margin-bottom: 8px; align-self: center; }
 #information-widgets .widget-container > div { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; width: 100%; }
 #information-widgets .widget-container > div > * { min-width: 0; }
-#information-widgets .widget-container { padding: 0 6px; margin-bottom: 10px; }
-.services-group { padding-top: 12px; }
-#information-widgets > div > div:last-child, #information-widgets > div > div:last-child * { justify-content: center !important; text-align: center; }
+#information-widgets, #information-widgets * { color: var(--lg-fg); }
 
-/* App feel */
+/* ---- lighter blur on phones (smoother scrolling on mid-range Android) + a solid fallback ---- */
+@media (max-width: 700px), (max-height: 560px) {
+  .services-list .service > div, #information-widgets > div {
+    -webkit-backdrop-filter: blur(14px) saturate(150%) !important; backdrop-filter: blur(14px) saturate(150%) !important;
+  }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .services-list .service > div, #information-widgets > div { background: rgba(28, 34, 62, .82) !important; }
+}
+
+/* ---- app feel ---- */
 html, body { overscroll-behavior-x: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 img, a { -webkit-user-drag: none; }
-#page_container { padding-bottom: calc(24px + env(safe-area-inset-bottom)); padding-top: env(safe-area-inset-top); }
-.services-list .service > div { transition: transform .12s ease, background-color .12s ease; }
-.services-list .service > div:active { transform: scale(.96); }
-.services-group h2, .services-group [class*=group] > button { letter-spacing: .04em; }
+#page_container { padding-bottom: calc(24px + env(safe-area-inset-bottom)); padding-top: env(safe-area-inset-top); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
+.services-list .service > div { transition: transform .12s ease, box-shadow .12s ease; }
+.services-list .service > div:active { transform: scale(.97); }
+
+/* ---- landscape phone (short and wide): more columns, tighter spacing ---- */
+@media (orientation: landscape) and (max-height: 560px) {
+  :root { --lg-r: 18px; --lg-gap: 8px; }
+  #information-widgets { margin: 6px 10px 0 !important; }
+  #information-widgets > div { padding: 8px 12px 4px !important; }
+  #information-widgets > div > div:last-child { margin-bottom: 4px; }
+  #information-widgets .widget-container > div { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px 14px; }
+  .services-group { padding-top: 6px; }
+  .services-list { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); margin-top: 4px !important; }
+  .services-group:first-of-type .services-list { grid-template-columns: minmax(0, 1fr); }
+  .service-name { padding-top: 7px !important; padding-bottom: 4px !important; }
+}
+/* tablets and desktops */
+@media (min-width: 700px) and (min-height: 561px) {
+  .services-list { grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
+  .services-group:first-of-type .services-list { grid-template-columns: minmax(0, 1fr); }
+  #information-widgets .widget-container > div { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

@@ -46,7 +46,8 @@ docker compose logs -f
 | 2 | `media/navidrome` | Create the admin user |
 | 3 | `media/immich` | Choose a database password in `.env`; create the admin user; install the phone app |
 | 4 | `admin/portainer` | Open `https://<server>:9443` and set an admin password |
-| 5 | `monitoring/homepage` | Edit `config/services.yaml` with your own addresses |
+| 5 | `monitoring/status-dashboard` | Copy `services.example.json` to `services.json` and edit the names; `docker compose up -d --build`; open port 3002 |
+| 6 | `monitoring/homepage` | Edit `config/services.yaml` with your own addresses (its tiles read live numbers from the status dashboard) |
 
 ## 4. Smart home
 

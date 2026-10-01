@@ -68,6 +68,40 @@ A container problem recovers, so "red then green" is meaningful. A drive error n
 turned the lantern red it would stay red permanently and stop carrying information. Drive warnings
 therefore go to the phone only.
 
+## Live dashboard
+
+[`status-dashboard`](../services/monitoring/status-dashboard) answers "how is the server right now?" in real time. It is
+a single standard-library Python file plus one static page.
+
+![Live status page](images/dashboard-desktop.png)
+
+**Data sources (all read-only):**
+
+| Metric | Source |
+|---|---|
+| CPU, memory, swap, load, uptime | `/proc/stat`, `/proc/meminfo`, `/proc/loadavg`, `/proc/uptime` |
+| Drive stall (I/O pressure) | `/proc/pressure/io` (PSI) |
+| Disk usage | `statvfs` on the host root mounted read-only |
+| Temperature | `/sys/class/thermal` |
+| Container state and health | Docker Engine API (container list) |
+| Per-container CPU and memory | cgroup v2 files `cpu.stat` and `memory.current` |
+
+Per-container numbers come from the cgroup files directly because the Docker stats API is slow when called for
+many containers, which matters on an old laptop. The collector samples the host every 5 seconds and the
+containers every 10 seconds.
+
+**Endpoints:** `/` (the page), `/api/status`, `/api/summary` (a few flat numbers), `/api/service/<name>`
+(one container) and `/api/history` (sparkline samples). The summary and service endpoints exist so another tool,
+such as the phone start page, can show live values without any API keys.
+
+**Problem detection** reuses the same ideas as the watchdog: a container that is not running or is unhealthy,
+disk at 85% or more, memory at 90% or more, or the drive stalled for 30% or more of the last minute. Container
+problems turn the page red, resource warnings turn it amber.
+
+**Design notes:** the page is server-rendered with its first data inline, so it paints immediately and then polls;
+it pauses polling while the tab is hidden; and it uses a lighter blur on phones for smoother scrolling on mid-range
+devices. A `DEMO=1` mode generates synthetic data for screenshots and development.
+
 ## Testing the chain
 
 ```bash

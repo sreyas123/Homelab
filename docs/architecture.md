@@ -15,6 +15,7 @@ flowchart TB
             IM[Immich<br/>server, ML, Postgres, Redis]
             HA[Home Assistant<br/>host networking]
             HP[Homepage]
+            SD[status-dashboard]
             PT[Portainer]
             SW[server-watcher]
             LA[light-alerts]
@@ -38,7 +39,7 @@ flowchart TB
 | Layer | Components | Notes |
 |---|---|---|
 | Applications | Jellyfin, Navidrome, Immich, Home Assistant | Each in its own Compose project |
-| Admin and visibility | Portainer, Homepage | Read the Docker socket to show state |
+| Admin and visibility | Portainer, Homepage, status-dashboard | Read the Docker socket to show state; the status dashboard also reads `/proc` and cgroups and serves a JSON API |
 | Self-monitoring | server-watcher, disk-watch, smartd | Custom code; alerts go to ntfy |
 | Physical signalling | light-alerts + smart lantern | Subscribes to the alert stream |
 | Access | Tailscale | No router port forwarding |

@@ -50,6 +50,11 @@ Keep a backup copy of `configuration.yaml` before editing.
 - Did the laptop suspend? Check the lid-close setting.
 - Is Wi-Fi connected? Try the Tailscale address if the LAN address fails.
 
+## The live dashboard says "Offline", or tiles on the start page show a dash
+The status dashboard container is not reachable. Check `docker ps` for `status-dashboard` and `curl http://localhost:3002/healthz`.
+The start page tiles read from `http://<server>:3002/api/...`, so fix the address in `services.yaml` if it differs.
+A container that is not listed in `services.json` still appears (under "Other") using its Docker name.
+
 ## Reading logs
 ```bash
 docker logs --tail 50 <container>

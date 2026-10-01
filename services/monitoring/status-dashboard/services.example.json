@@ -1,0 +1,16 @@
+{
+  "containers": {
+    "jellyfin":      {"label": "Media Server",     "desc": "Your own movies, shows and music library",    "group": "Media",      "port": 8096},
+    "navidrome":     {"label": "Music Streaming",  "desc": "Stream the music collection anywhere",        "group": "Media",      "port": 4533},
+    "immich_server": {"label": "Photos",           "desc": "Photo and video backup with search",          "group": "Media",      "port": 2283},
+    "homeassistant": {"label": "Smart Home",       "desc": "Lights and automations, local control",       "group": "Home",       "port": 8123},
+    "light-alerts":  {"label": "Lantern Alerts",   "desc": "Turns a lamp red or green with server status","group": "Home",       "link": false},
+    "homepage":      {"label": "Dashboard",        "desc": "Phone-friendly start page",                   "group": "Monitoring", "port": 3001},
+    "server-watcher":{"label": "Watchdog",         "desc": "Checks every service once a minute",          "group": "Monitoring", "link": false},
+    "status-dashboard": {"label": "Live Status",   "desc": "This page",                                   "group": "Monitoring", "port": 3002},
+    "portainer":     {"label": "Container Admin",  "desc": "Inspect and manage containers",               "group": "Admin",      "port": 9443, "scheme": "https"},
+    "immich_postgres":{"label": "Photo Database",  "desc": "PostgreSQL for the photo service",            "group": "Background", "link": false},
+    "immich_redis":  {"label": "Photo Cache",      "desc": "In-memory cache for the photo service",       "group": "Background", "link": false},
+    "immich_machine_learning": {"label": "Photo AI","desc": "Face and object recognition",                "group": "Background", "link": false}
+  }
+}

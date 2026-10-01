@@ -28,7 +28,40 @@ This repository contains the configuration, the custom tooling and the write-ups
 | **Incident response and root-cause analysis** | [write-up of a real outage caused by a saturated hard drive](docs/incident-slow-disk.md) |
 | **Networking and security** | Tailscale-only remote access, an external port scan to verify nothing is exposed, router review, secrets handling: [security notes](docs/security.md) |
 | **IoT and API integration** | local-only control of smart lights over their UDP/LAN protocols, a template-light workaround for a colour bug: [`smart-home`](services/smart-home) |
+| **Front-end and UX** | a dependency-free live dashboard with SVG gauges and sparklines, a frosted-glass design, and layouts that adapt to phone portrait, phone landscape and desktop: [`status-dashboard`](services/monitoring/status-dashboard) |
 | **Technical writing** | architecture, decisions, setup guide and troubleshooting in [`docs/`](docs) |
+
+---
+
+## Dashboards
+
+Two dashboards make the server's state visible at a glance. Both use a "liquid glass" style (frosted,
+translucent cards over soft coloured light) and are laid out for **phone portrait, phone landscape and desktop**.
+The numbers are live: they refresh every few seconds from the server itself. The screenshots below use demo data.
+
+**Live status page** (custom, [`status-dashboard`](services/monitoring/status-dashboard)): health of the whole server,
+six live gauges with history sparklines, and every service with its own CPU and memory.
+
+<p align="center">
+  <img src="docs/images/dashboard-portrait.png" alt="Live status page on a phone in portrait" width="260">
+  &nbsp;
+  <img src="docs/images/dashboard-alert.png" alt="The same page when a service is unhealthy and the drive is struggling" width="260">
+</p>
+<p align="center">
+  <img src="docs/images/dashboard-landscape.png" alt="Live status page on a phone in landscape" width="540">
+</p>
+<p align="center">
+  <img src="docs/images/dashboard-desktop.png" alt="Live status page on a desktop screen" width="680">
+</p>
+
+**Phone start page** ([Homepage](services/monitoring/homepage), restyled): a tile per service with a status dot and live
+CPU and memory numbers fed by the status API.
+
+<p align="center">
+  <img src="docs/images/homepage-portrait.png" alt="Phone start page in portrait" width="240">
+  &nbsp;
+  <img src="docs/images/homepage-landscape.png" alt="Phone start page in landscape" width="520">
+</p>
 
 ---
 
@@ -44,6 +77,7 @@ flowchart LR
         HA[Home Assistant<br/>smart home]
         HP[Homepage<br/>dashboard]
         PT[Portainer<br/>container admin]
+        SD[status-dashboard<br/>live web dashboard]
         SW[server-watcher<br/>custom watchdog]
         LA[light-alerts<br/>custom bridge]
         DW[disk-watch + smartd<br/>drive health]
@@ -73,7 +107,8 @@ Details: [docs/architecture.md](docs/architecture.md)
 | **light-alerts** *(custom)* | Turns the lantern into a server status light | [`smart-home/light-alerts`](services/smart-home/light-alerts) |
 | **server-watcher** *(custom)* | Watchdog for containers, disk and memory | [`monitoring/server-watcher`](services/monitoring/server-watcher) |
 | **disk-watch + smartd** *(custom)* | Early warning for a degrading hard drive | [`monitoring/disk-watch`](services/monitoring/disk-watch) |
-| Homepage | Dashboard with live status per service | [`monitoring/homepage`](services/monitoring/homepage) |
+| **status-dashboard** *(custom)* | Real-time web dashboard and JSON API for the whole server | [`monitoring/status-dashboard`](services/monitoring/status-dashboard) |
+| Homepage | Phone start page with live numbers on every tile, restyled in a frosted-glass theme | [`monitoring/homepage`](services/monitoring/homepage) |
 | Portainer | Web UI for managing containers | [`admin/portainer`](services/admin/portainer) |
 
 ---
@@ -89,6 +124,10 @@ Details: [docs/architecture.md](docs/architecture.md)
   drive-level alerting. See the [incident write-up](docs/incident-slow-disk.md).
 - **Local-first smart home.** Both lights are controlled over the local network with no cloud account.
   Where Home Assistant's built-in support fell short, I wrote small scripts against the device's LAN protocol.
+- **A live dashboard I wrote myself.** A zero-dependency Python service reads `/proc`, the Docker API and the
+  container cgroup files (much cheaper than the stats API) and serves a responsive page plus a JSON API. It
+  uses about 25 MB of RAM and almost no CPU on a slow laptop, runs read-only with all capabilities dropped,
+  and feeds live numbers to the phone start page too. See [monitoring and alerting](docs/monitoring-and-alerting.md#live-dashboard).
 - **Verified, not assumed, security.** I tested the server from outside the home network to confirm no
   service is reachable, and documented the remaining gaps honestly: [security notes](docs/security.md).
 
@@ -111,7 +150,7 @@ homelab/
 └── services/
     ├── media/            jellyfin, navidrome, immich
     ├── smart-home/       home-assistant, light-alerts
-    ├── monitoring/       server-watcher, disk-watch, homepage
+    ├── monitoring/       server-watcher, disk-watch, status-dashboard, homepage
     └── admin/            portainer
 ```
 

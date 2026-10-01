@@ -11,3 +11,4 @@ raw_headers.txt
 *.bak
 __pycache__/
 .storage/
+services/monitoring/status-dashboard/services.json

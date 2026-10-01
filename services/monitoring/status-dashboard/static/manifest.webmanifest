@@ -1,0 +1,11 @@
+{
+  "name": "__SERVER_NAME__ Live",
+  "short_name": "Server",
+  "description": "Live status of the home server",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#070b17",
+  "theme_color": "#070b17",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
