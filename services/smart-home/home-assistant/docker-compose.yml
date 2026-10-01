@@ -1,0 +1,15 @@
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    container_name: homeassistant
+    restart: unless-stopped
+    # Host networking so HA can see the lights directly on the LAN:
+    # WiZ uses UDP broadcast (38899), Govee LAN API uses multicast (4001/4002).
+    network_mode: host
+    environment:
+      TZ: Your/Timezone  # (Put your own time zone here, for example Europe/London)
+    volumes:
+      - ./config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+      - ${HOME}/server/light-alerts/shared:/shared

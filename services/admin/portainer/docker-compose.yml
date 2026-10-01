@@ -1,0 +1,15 @@
+# Portainer - a web control panel for all the containers. (Reconstructed from the running container.)
+services:
+  portainer:
+    image: portainer/portainer-ce:lts
+    container_name: portainer
+    ports:
+      - "9443:9443"      # the web page (https)
+      - "8000:8000"      # optional "edge agent" port
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    restart: always
+
+volumes:
+  portainer_data:

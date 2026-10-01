@@ -1,0 +1,14 @@
+services:
+  light-alerts:
+    image: python:3.12-alpine
+    container_name: light-alerts
+    restart: unless-stopped
+    network_mode: host
+    working_dir: /app
+    command: python3 -u alert_light.py
+    environment:
+      NTFY_TOPIC: ${NTFY_TOPIC}  # (Put your own private ntfy topic name in the .env file)
+      LANTERN_IP: 192.168.0.110  # (Put your own lantern's IP address here instead of this example)
+    volumes:
+      - ./alert_light.py:/app/alert_light.py:ro
+      - ./shared:/shared

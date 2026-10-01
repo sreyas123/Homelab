@@ -1,0 +1,35 @@
+title: Lenovo Server
+description: Home server
+theme: dark
+color: slate
+headerStyle: clean
+statusStyle: dot
+target: _self
+hideVersion: true
+cardBlur: md
+iconStyle: gradient
+useEqualHeights: true
+background:
+  image: https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=60
+  blur: sm
+  saturate: 60
+  brightness: 45
+  opacity: 100
+layout:
+  Media:
+    style: row
+    columns: 2
+    icon: mdi-play-circle-outline
+  Home:
+    style: row
+    columns: 2
+    icon: mdi-home-lightbulb-outline
+  Tools:
+    style: row
+    columns: 2
+    icon: mdi-wrench-outline
+  Background:
+    style: row
+    columns: 2
+    icon: mdi-server-outline
+    initiallyCollapsed: true

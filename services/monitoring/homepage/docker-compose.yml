@@ -1,0 +1,18 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    ports:
+      - "3001:3000"
+    environment:
+      PUID: 1000
+      PGID: 986
+      # (Put your own server IP, Tailscale IP and server name here instead of the examples and <placeholders> below)
+      HOMEPAGE_ALLOWED_HOSTS: "192.168.0.113:3001,<TAILSCALE_IP>:3001,<SERVER_NAME>:3001,<SERVER_NAME>.<YOUR_TAILNET>.ts.net:3001,localhost:3001"
+    volumes:
+      - ./config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/mnt/host-root:ro
+    group_add:
+      - "986"
+    restart: unless-stopped

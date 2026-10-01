@@ -1,0 +1,47 @@
+/* Phone-first layout */
+body { -webkit-tap-highlight-color: transparent; }
+
+/* Stats bar: tidy, centered */
+#information-widgets { margin: 12px 12px 0 !important; padding-bottom: 10px !important; justify-content: center !important; gap: 6px 14px; }
+#information-widgets .widget-container { align-self: center; }
+
+/* Two tiles per row */
+#services { padding-left: 4px; padding-right: 4px; }
+.services-group { padding-left: 8px !important; padding-right: 8px !important; }
+.services-list { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 8px !important; }
+.services-list > .service { margin: 0 !important; }
+.services-list .service > div { margin-bottom: 0 !important; }
+
+/* Compact tile: icon on top, name and description underneath */
+.service-card, .service > div { border-radius: 16px !important; }
+.service-title { font-size: 1.1rem; letter-spacing: .02em; margin-bottom: 0 !important; }
+.service-name { font-size: 0.9rem; font-weight: 600; line-height: 1.15; }
+.service-description { font-size: 0.68rem; opacity: 0.65; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.service-icon { width: 32px !important; height: 32px !important; }
+.service-icon img, .service-icon svg { width: 28px; height: 28px; }
+.service-title, .service-name { min-width: 0; }
+
+/* One dot per tile, tucked in the corner, never over the name */
+.service-tags { top: 6px !important; right: 6px !important; }
+.service-tags > * > div { padding: 4px !important; }
+.service-tags > * > div > div { width: 9px !important; height: 9px !important; }
+.service-tags:has(.service-site-monitor) .service-container-stats { display: none !important; }
+.service-name { padding-right: 22px !important; padding-top: 10px !important; padding-bottom: 10px !important; }
+.service-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Clock on its own row above the stats */
+#information-widgets > div > div:last-child { order: -1; flex-basis: 100%; justify-content: center !important; margin-bottom: 8px; }
+#information-widgets .widget-container { flex-basis: 100%; }
+#information-widgets .widget-container > div { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; width: 100%; }
+#information-widgets .widget-container > div > * { min-width: 0; }
+#information-widgets .widget-container { padding: 0 6px; margin-bottom: 10px; }
+.services-group { padding-top: 12px; }
+#information-widgets > div > div:last-child, #information-widgets > div > div:last-child * { justify-content: center !important; text-align: center; }
+
+/* App feel */
+html, body { overscroll-behavior-x: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+img, a { -webkit-user-drag: none; }
+#page_container { padding-bottom: calc(24px + env(safe-area-inset-bottom)); padding-top: env(safe-area-inset-top); }
+.services-list .service > div { transition: transform .12s ease, background-color .12s ease; }
+.services-list .service > div:active { transform: scale(.96); }
+.services-group h2, .services-group [class*=group] > button { letter-spacing: .04em; }

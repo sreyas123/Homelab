@@ -1,0 +1,18 @@
+# server-watcher - the watchdog. Checks every container + disk + memory once a minute
+# and sends a phone notification (via ntfy) when something breaks or recovers.
+services:
+  server-watcher:
+    build: .
+    image: server-watcher:latest
+    container_name: server-watcher
+    environment:
+      - NTFY_TOPIC=${NTFY_TOPIC}     # (Put your own private ntfy topic name in the .env file - see .env.example)
+      - POLL_SECONDS=60
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro   # lets it ask Docker what is running
+      - /:/hostfs:ro                                   # lets it read disk + memory numbers
+      - server-watcher-state:/state                    # remembers what it already told you
+    restart: unless-stopped
+
+volumes:
+  server-watcher-state:

@@ -1,0 +1,14 @@
+# Jellyfin - the movie / TV / music player. (Reconstructed from the running container.)
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    ports:
+      - "8096:8096"
+    volumes:
+      - ${HOME}/docker/jellyfin/config:/config          # settings + database
+      - ${HOME}/docker/jellyfin/cache:/cache            # thumbnails etc. (safe to delete)
+      - ${HOME}/server/media/movies:/media/movies
+      - ${HOME}/server/media/tv:/media/tv
+      - ${HOME}/server/media/music:/media/music
+    restart: unless-stopped

@@ -1,0 +1,13 @@
+# Never commit secrets or private data
+.env
+*.env
+!.env.example
+secrets.yaml
+browser.json
+raw_headers.txt
+*.db
+*.db-*
+*.log
+*.bak
+__pycache__/
+.storage/

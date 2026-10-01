@@ -1,0 +1,78 @@
+# (Replace every <TAILSCALE_IP> below with your own Tailscale IP address - or your server's home IP if you don't use Tailscale)
+# (Replace every 192.168.0.113 below with your own server's home-network IP address - it is only an example)
+
+- Media:
+    - Jellyfin:
+        description: Media library
+        href: http://<TAILSCALE_IP>:8096
+        icon: jellyfin.png
+        siteMonitor: http://192.168.0.113:8096
+        statusStyle: dot
+        server: local
+        container: jellyfin
+    - Navidrome:
+        description: Music
+        href: http://<TAILSCALE_IP>:4533
+        icon: navidrome.png
+        siteMonitor: http://192.168.0.113:4533
+        statusStyle: dot
+        server: local
+        container: navidrome
+    - Immich:
+        description: Photos
+        href: http://<TAILSCALE_IP>:2283
+        icon: immich.png
+        siteMonitor: http://192.168.0.113:2283
+        statusStyle: dot
+        server: local
+        container: immich_server
+
+- Home:
+    - Home Assistant:
+        description: Lights & automations
+        href: http://<TAILSCALE_IP>:8123
+        icon: home-assistant.png
+        siteMonitor: http://192.168.0.113:8123
+        statusStyle: dot
+        server: local
+        container: homeassistant
+
+- Tools:
+    - Portainer:
+        description: Containers
+        href: https://<TAILSCALE_IP>:9443
+        icon: portainer.png
+        statusStyle: dot
+        server: local
+        container: portainer
+- Background:
+    - Server Watcher:
+        icon: mdi-bell-ring-outline
+        description: Sends alerts
+        statusStyle: dot
+        server: local
+        container: server-watcher
+    - Light Alerts:
+        icon: mdi-lightbulb-alert-outline
+        description: Lantern alerts
+        statusStyle: dot
+        server: local
+        container: light-alerts
+    - Immich Database:
+        icon: postgres.png
+        description: Photo database
+        statusStyle: dot
+        server: local
+        container: immich_postgres
+    - Immich Cache:
+        icon: redis.png
+        description: Photo cache
+        statusStyle: dot
+        server: local
+        container: immich_redis
+    - Immich AI:
+        icon: immich.png
+        description: Face and search AI
+        statusStyle: dot
+        server: local
+        container: immich_machine_learning

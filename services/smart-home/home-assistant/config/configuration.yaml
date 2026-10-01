@@ -1,0 +1,106 @@
+# (Lantern note: the lantern's IP address is set inside govee_lantern.py and lantern_effects.py - put your own there)
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+# Govee H1630 lantern: the built-in Govee integration only gives on/off for this
+# model, so drive it directly over the LAN API (brightness/colour/effects).
+# Effects are software effects (LAN API has no scene support): lantern_effects.py.
+shell_command:
+  lantern_off: python3 /config/govee_lantern.py off
+  lantern_on: python3 /config/govee_lantern.py on
+  lantern_bright: "python3 /config/govee_lantern.py bright {{ pct }}"
+  lantern_rgb: "python3 /config/govee_lantern.py rgb {{ r }} {{ g }} {{ b }}"
+  lantern_temp: "python3 /config/govee_lantern.py temp {{ k }}"
+  lantern_effect: "python3 /config/govee_lantern.py effect {{ name }}"
+
+input_text:
+  lantern_effect:
+    name: Lantern effect
+    initial: none
+
+template:
+  - light:
+      - name: Desk Lantern
+        unique_id: govee_h1630_full_control
+        effect_list: "{{ ['rainbow', 'breathe', 'candle', 'aurora', 'party'] }}"
+        effect: "{{ none if is_state('input_text.lantern_effect', 'none') else states('input_text.lantern_effect') }}"
+        turn_on:
+          - action: shell_command.lantern_on
+          - action: input_text.set_value
+            target: {entity_id: input_text.lantern_effect}
+            data: {value: none}
+        turn_off:
+          - action: shell_command.lantern_off
+          - action: input_text.set_value
+            target: {entity_id: input_text.lantern_effect}
+            data: {value: none}
+        set_level:
+          - action: shell_command.lantern_bright
+            data:
+              pct: "{{ (brightness / 2.55) | round(0) | int }}"
+        set_rgb:
+          - action: shell_command.lantern_rgb
+            data: {r: "{{ r }}", g: "{{ g }}", b: "{{ b }}"}
+          - action: input_text.set_value
+            target: {entity_id: input_text.lantern_effect}
+            data: {value: none}
+        set_temperature:
+          - action: shell_command.lantern_temp
+            data:
+              k: "{{ color_temp_kelvin }}"
+          - action: input_text.set_value
+            target: {entity_id: input_text.lantern_effect}
+            data: {value: none}
+        set_effect:
+          - action: shell_command.lantern_effect
+            data:
+              name: "{{ effect }}"
+          - action: input_text.set_value
+            target: {entity_id: input_text.lantern_effect}
+            data: {value: "{{ effect }}"}
+
+      # WiZ bulb wrapper: HA's colour picker keeps the old white-LED level (w=253),
+      # washing colours out. This always sends white=0 for colours; the rest passes through.
+      - name: Bedroom Lamp Fixed
+        unique_id: wiz_bedroom_lamp_fixed
+        state: "{{ is_state('light.bedroom_lamp', 'on') }}"
+        level: "{{ state_attr('light.bedroom_lamp', 'brightness') }}"
+        rgb: >-
+          {% set c = state_attr('light.bedroom_lamp', 'rgbw_color') %}
+          {{ [c[0], c[1], c[2]] if c and state_attr('light.bedroom_lamp', 'color_mode') == 'rgbw' else none }}
+        temperature: >-
+          {{ state_attr('light.bedroom_lamp', 'color_temp_kelvin') if state_attr('light.bedroom_lamp', 'color_mode') == 'color_temp' else none }}
+        effect_list: "{{ state_attr('light.bedroom_lamp', 'effect_list') }}"
+        effect: "{{ state_attr('light.bedroom_lamp', 'effect') }}"
+        turn_on:
+          - action: light.turn_on
+            target: {entity_id: light.bedroom_lamp}
+        turn_off:
+          - action: light.turn_off
+            target: {entity_id: light.bedroom_lamp}
+        set_level:
+          - action: light.turn_on
+            target: {entity_id: light.bedroom_lamp}
+            data: {brightness: "{{ brightness }}"}
+        set_rgb:
+          - action: light.turn_on
+            target: {entity_id: light.bedroom_lamp}
+            data:
+              rgbw_color: "{{ [r, g, b, 0] }}"
+        set_temperature:
+          - action: light.turn_on
+            target: {entity_id: light.bedroom_lamp}
+            data: {color_temp_kelvin: "{{ color_temp_kelvin }}"}
+        set_effect:
+          - action: light.turn_on
+            target: {entity_id: light.bedroom_lamp}
+            data: {effect: "{{ effect }}"}
